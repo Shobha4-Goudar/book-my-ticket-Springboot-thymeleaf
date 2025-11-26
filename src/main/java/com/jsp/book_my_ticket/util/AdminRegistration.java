@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminRegistration implements CommandLineRunner {
 
-	@Value("${admin.email)")
+	@Value("${admin.email}")
 	private String email;
 	
 	@Value("${admin.password}")
