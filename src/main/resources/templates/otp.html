@@ -179,7 +179,7 @@ to {
 					<input type="number" name="otp" class="form-control"
 						placeholder="Enter OTP" required>
 				</div>
-				<button class="btn btn-primary w-100 py-2 mb-2">Verify OTP</button>
+				<button type="submit" class="btn btn-primary w-100 py-2 mb-2">Verify OTP</button>
 
 				<div class="text-center mt-3">
 					<a th:href="'/resend-otp/'+${email}" class="resend-link">Resend
@@ -196,10 +196,31 @@ to {
 
 	<script>
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.toastify').forEach(t => {
-        setTimeout(() => t.remove(), 3500);
-    });
-});
+	 const toasts = document.querySelectorAll('.toastify');
+	    toasts.forEach(toastElement => {
+	        const closeBtn = document.createElement('button');
+	        closeBtn.className = 'toastify-close';
+	        closeBtn.innerHTML = '×';
+	        closeBtn.type = 'button';
+	        
+	        const spanElement = toastElement.querySelector('span');
+	        if (spanElement) {
+	            toastElement.insertBefore(closeBtn, spanElement.nextSibling);
+	        }
+	        
+	        closeBtn.addEventListener('click', () => {
+	            toastElement.style.animation = 'toastSlideOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+	            setTimeout(() => toastElement.remove(), 400);
+	        });
+	        
+	        const timeout = setTimeout(() => {
+	            toastElement.style.animation = 'toastSlideOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+	            setTimeout(() => toastElement.remove(), 400);
+	        }, 3500);
+	        
+	        closeBtn.addEventListener('click', () => clearTimeout(timeout));
+	    });
+	});
 </script>
 </body>
 </html>

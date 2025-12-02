@@ -32,7 +32,7 @@ public class AdminRegistration implements CommandLineRunner {
 //			user.setRole("ADMIN");
 //			user.setMobile(0L);
 //			user.setName("ADMIN");
-			User user = new User(null, "ADMIN", email, 0L, AES.encrypt(password), "ADMIN");
+			User user = new User(null, "ADMIN", email, 0L, AES.encrypt(password), "ADMIN",false);
 			userRepository.save(user);
 			log.info("Admin Registration Success");
 		}

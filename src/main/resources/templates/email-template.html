@@ -78,18 +78,21 @@ body {
 		<div class="title">OTP Verification</div>
 
 		<p class="text">
-			Hello <strong th:text="${name}"></strong>, <br>Your One-Time
+			Hello <strong th:text="${name}"></strong>, <br><br>
+			Your One-Time
 			Password for verification is:
 		</p>
 
 		<div class="otp-code" th:text="${otp}"></div>
 
 		<p class="text">
-			This OTP is valid for the next 2 minutes.<br> Please do not
-			share it with anyone.
+			⏱️ This OTP is valid for the next <strong>2 minutes</strong>.<br>
+				🔒 Please do not share it with anyone.
 		</p>
 
-		<div class="footer">© BookMyTicket — Secure Verification System
+		<div class="footer">
+			<p class="footer-text">© 2024 BookMyTicket — Secure Verification System</p>
+			<p class="footer-text">Thank you for choosing BookMyTicket for your movie booking needs!</p>
 		</div>
 	
 	</div>
