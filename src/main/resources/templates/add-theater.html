@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Add Theater</title>
+    <meta charset="UTF-8">
+    <title>Add Theater</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d; /* Dark Theme */
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+            box-shadow: 0 2px 5px rgba(255, 204, 0, 0.2);
+        }
+
+        /* Centered Card */
+        .form-container {
+            width: 450px;
+            margin: 70px auto;
+            padding: 25px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.15);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 5px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+        }
+
+        span {
+            font-size: 12px;
+            color: #ff4d4d;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            background: #ffcc00;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e6b800;
+        }
+    </style>
+
 </head>
+
 <body>
-<form action="/add-theater" method="post" enctype="multipart/form-data" th:object="${theaterDto}">
-		Name: <input type="text" th:field="*{name}"> <span
-			th:errors="*{name}"></span> <br> Address: <input type="text"
-			th:field="*{address}"> <span th:errors="*{address}"></span> <br>
-		LocationLink: <input type="text" th:field="*{locationLink}"> <span
-			th:errors="*{locationLink}"></span> <br> Image: <input
-			type="file" accept="image/*" th:field="*{image}"> <span
-			th:errors="*{image}"></span> <br>
-		<button>Add</button>
-	</form>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        BookMyTicket – Add Theater
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-container">
+        <h2>Add Theater</h2>
+
+        <form action="/add-theater" method="post" enctype="multipart/form-data" th:object="${theaterDto}">
+
+            <label>Name</label>
+            <input type="text" th:field="*{name}">
+            <span th:errors="*{name}"></span>
+
+            <label>Address</label>
+            <input type="text" th:field="*{address}">
+            <span th:errors="*{address}"></span>
+
+            <label>Location Link</label>
+            <input type="text" th:field="*{locationLink}">
+            <span th:errors="*{locationLink}"></span>
+
+            <label>Theater Image</label>
+            <input type="file" accept="image/*" th:field="*{image}">
+            <span th:errors="*{image}"></span>
+
+            <button type="submit">Add Theater</button>
+        </form>
+    </div>
+
 </body>
 </html>

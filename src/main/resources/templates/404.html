@@ -1,11 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>404 - BookMyTicket</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: #0d0d0d;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff3c3c;
+            margin-bottom: 18px;
+            text-shadow: 0 0 12px rgba(255, 60, 60, 0.6);
+        }
+
+        .big-404 {
+            font-size: 120px;
+            font-weight: 700;
+            color: #ff3c3c;
+            letter-spacing: -4px;
+            animation: glitch 1s infinite;
+            text-shadow: 0 0 30px rgba(255, 60, 60, 0.4);
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px #ff4f4f; }
+            25% { text-shadow: -2px -2px #ff2e2e; }
+            50% { text-shadow: 3px -2px #ee1b1b; }
+            75% { text-shadow: -3px 2px #ff1a1a; }
+            100% { text-shadow: 2px 2px #ff4f4f; }
+        }
+
+        .message {
+            margin: 20px auto;
+            font-size: 20px;
+            opacity: 0.85;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff3c3c, #ff7b3c);
+            padding: 14px 32px;
+            border-radius: 40px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 18px rgba(255, 60, 60, 0.5);
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(45deg, #ff2a2a, #ff631f);
+            box-shadow: 0 0 30px rgba(255, 60, 60, 0.7);
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
+
 <body>
-<h1>Sorrry, Page inna Doing </h1>
-<a href="/">Click for Home</a>
+    <div class="container">
+
+        <div class="logo">🎬 BookMyTicket</div>
+
+        <div class="big-404">404</div>
+
+        <p class="message">
+            Oops! The page you’re looking for has gone off-screen 🎥  
+            <br>Or maybe it never existed…
+        </p>
+
+        <a href="/" class="btn-home">⬅ Back to Home</a>
+
+    </div>
 </body>
 </html>

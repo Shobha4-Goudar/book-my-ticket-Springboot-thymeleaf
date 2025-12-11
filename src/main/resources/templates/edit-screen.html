@@ -1,17 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Edit Screen</title>
+    <meta charset="UTF-8">
+    <title>Edit Screen</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+            box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
+        }
+
+        /* Form Card */
+        .form-container {
+            width: 400px;
+            margin: 70px auto;
+            padding: 25px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.15);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 5px;
+            border: none;
+            background: #333;
+            border-radius: 6px;
+            color: white;
+        }
+
+        input[type="hidden"] {
+            display: none;
+        }
+
+        span {
+            font-size: 12px;
+            color: #ff4d4d;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            background: #ffcc00;
+            border: none;
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e6b800;
+        }
+    </style>
+
 </head>
+
 <body>
-<form action="/update-screen" method="post" th:object="${screenDto}">
-		<input type="hidden" th:field="*{theaterId}">
-		<input type="hidden" name="id" th:value="${id}"> <span
-			th:errors="*{theaterId}"></span> Name: <input type="text"
-			th:field="*{name}"> <span th:errors="*{name}"></span> Type: <input
-			type="text" th:field="*{type}"> <span th:errors="*{type}"></span>
-		<button>Update Screen</button>
-	</form>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        BookMyTicket – Edit Screen
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-container">
+        <h2>Edit Screen</h2>
+
+        <form action="/update-screen" method="post" th:object="${screenDto}">
+
+            <input type="hidden" th:field="*{theaterId}">
+            <input type="hidden" name="id" th:value="${id}">
+
+            <label>Name</label>
+            <input type="text" th:field="*{name}">
+            <span th:errors="*{name}"></span>
+
+            <label>Type</label>
+            <input type="text" th:field="*{type}">
+            <span th:errors="*{type}"></span>
+
+            <button>Update Screen</button>
+        </form>
+    </div>
+
 </body>
 </html>

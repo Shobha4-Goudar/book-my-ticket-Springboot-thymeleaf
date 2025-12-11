@@ -1,51 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Manage Screens</title>
+<title>Manage Screens | BookMyTicket</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #0d0d0d;
+        color: #fff;
+    }
+
+    /* Navbar */
+    .navbar {
+        background: #1a1a1a;
+        padding: 15px 30px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffcc00;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
+    }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    /* Card */
+    .screen-card {
+        background: rgba(30, 30, 30, 0.85);
+        border-radius: 12px;
+        padding: 20px;
+        width: 250px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        transition: transform 0.3s, box-shadow 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .screen-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+    }
+
+    .screen-card h3 {
+        color: #ffcc00;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .screen-card p {
+        font-size: 14px;
+        color: #ccc;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 8px 12px;
+        margin: 4px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-edit { background: #ffcc00; color: black; }
+    .btn-edit:hover { background: #e6b800; }
+
+    .btn-delete { background: #e74c3c; }
+    .btn-delete:hover { background: #c0392b; }
+
+    .btn-manage { background: #3498db; color: #fff; }
+    .btn-manage:hover { background: #2980b9; }
+
+    .btn-add-screen {
+        display: block;
+        margin: 40px auto 0 auto;
+        padding: 12px 25px;
+        background: #ff3c3c;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 16px;
+    }
+
+    .btn-add-screen:hover {
+        background: #ff1a1a;
+    }
+
+    .no-screens {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 24px;
+        color: #ffcc00;
+    }
+</style>
+
 </head>
 <body>
-<div align="center">
-<!-- TOASTIFY -->
-	<div class="toastify-container">
-		<div th:if="${pass}" class="toastify success">
-			<span th:text="${pass}"></span>
-		</div>
-		<div th:if="${fail}" class="toastify error">
-			<span th:text="${fail}"></span>
-		</div>
-	</div>
-	
-	<div th:if="${screens.isEmpty()}">
-		<h1>No Screens Present</h1>
-	</div>
-	<div th:if="${!screens.isEmpty()}">
-		<table border="1">
-			<tr>
-				<th>Name</th>
-				<th>Type</th>
-				<th>Number of Seats</th>
-				<th>Action</th>
-			</tr>
-			
-			<tr th:each="screen:${screens}">
-				<th th:text="${screen.name}"></th>
-				<th th:text="${screen.type}"></th>
-				<th>0</th>
-				<th>
-					<a th:href="'/edit-screen/'+${screen.id}"><button>Edit</button></a>
-					<a th:href="'/delete-screen/'+${screen.id}"><button>Delete</button></a>
-					<button>Manage Shows</button>
-						<a th:href="'/manage-seats/'+${screen.id}"><button>Manage Seat Layout</button></a>
-				</th>
-			</tr>
-			
-		</table>
-	</div>
-	
-	<div>
-		<a th:href="'/add-screen/'+${id}"><button>Add Screen</button></a>
-	</div>
-	</div>
+
+<div class="navbar">BookMyTicket – Manage Screens</div>
+
+<!-- No Screens -->
+<div th:if="${screens.isEmpty()}" class="no-screens">No Screens Present</div>
+
+<!-- Screens Container -->
+<div class="container" th:if="${!screens.isEmpty()}">
+    <div class="screen-card" th:each="screen : ${screens}">
+        <h3 th:text="${screen.name}"></h3>
+        <p th:text="'Type: ' + ${screen.type}"></p>
+        <p>Number of Seats: 0</p>
+
+        <div>
+            <a th:href="'/edit-screen/'+${screen.id}"><button class="btn btn-edit">Edit</button></a>
+            <a th:href="'/delete-screen/'+${screen.id}"><button class="btn btn-delete">Delete</button></a>
+            <a href="#"><button class="btn btn-manage">Manage Shows</button></a>
+            <a th:href="'/manage-seats/'+${screen.id}"><button class="btn btn-manage">Seats Layout</button></a>
+        </div>
+    </div>
+</div>
+
+<!-- Add Screen Button -->
+<a th:href="'/add-screen/'+${id}" style="text-decoration:none"><button class="btn-add-screen">Add Screen</button></a>
+
 </body>
 </html>

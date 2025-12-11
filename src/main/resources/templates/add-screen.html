@@ -1,16 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Add Screen</title>
+    <meta charset="UTF-8">
+    <title>Add Screen</title>
+
+    <!-- Common Theme (Same as main.html) -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d; /* Dark theme */
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00; /* BookMyTicket Gold */
+            box-shadow: 0 2px 5px rgba(255, 204, 0, 0.2);
+        }
+
+        /* Center card */
+        .form-container {
+            width: 420px;
+            margin: 70px auto;
+            padding: 25px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.15);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        /* Inputs */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 5px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: #fff;
+        }
+
+        span {
+            font-size: 12px;
+            color: #ff4d4d;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #ffcc00;
+            border: none;
+            color: black;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #e6b800;
+        }
+    </style>
 </head>
+
 <body>
-<form action="/add-screen" method="post" th:object="${screenDto}">
-		<input type="hidden" th:field="*{theaterId}"> <span
-			th:errors="*{theaterId}"></span> Name: <input type="text"
-			th:field="*{name}"> <span th:errors="*{name}"></span> Type: <input
-			type="text" th:field="*{type}"> <span th:errors="*{type}"></span>
-		<button>Add Screen</button>
-	</form>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        BookMyTicket – Add Screen
+    </div>
+
+    <!-- Card Form -->
+    <div class="form-container">
+        <h2>Add Screen</h2>
+
+        <form action="/add-screen" method="post" th:object="${screenDto}">
+            <input type="hidden" th:field="*{theaterId}">
+            <span th:errors="*{theaterId}"></span>
+
+            <label>Name</label>
+            <input type="text" th:field="*{name}">
+            <span th:errors="*{name}"></span>
+
+            <label>Type</label>
+            <input type="text" th:field="*{type}">
+            <span th:errors="*{type}"></span>
+
+            <button type="submit">Add Screen</button>
+        </form>
+    </div>
+
 </body>
 </html>

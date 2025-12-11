@@ -1,22 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Update Theater</title>
+    <meta charset="UTF-8">
+    <title>Update Theater | BookMyTicket</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d0d0d; /* Dark Theme */
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+            box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
+        }
+
+        /* Form Card */
+        .form-container {
+            width: 450px;
+            margin: 70px auto;
+            padding: 25px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.15);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: #fff;
+        }
+
+        input[type="hidden"] {
+            display: none;
+        }
+
+        span {
+            font-size: 12px;
+            color: #ff4d4d;
+        }
+
+        img {
+            margin-top: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            background: #ffcc00;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e6b800;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 4px;
+        }
+    </style>
 </head>
+
 <body>
-<form action="/update-theater" method="post" enctype="multipart/form-data" th:object="${theaterDto}">
-		<input type="hidden" name="id" th:value="${id}"> 
-		Name: <input type="text" th:field="*{name}"> <span
-			th:errors="*{name}"></span> <br> Address: <input type="text"
-			th:field="*{address}"> <span th:errors="*{address}"></span> <br>
-		LocationLink: <input type="text" th:field="*{locationLink}"> <span
-			th:errors="*{locationLink}"></span> <br> Image: <input
-			type="file" accept="image/*" th:field="*{image}"> <span
-			th:errors="*{image}"></span> (Dont Want to change Dont Upload New)
-			<img alt="" height="100px" width="100px" th:src="${imageLink}">
-			<br>
-		<button>Update</button>
-	</form>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        BookMyTicket – Update Theater
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-container">
+        <h2>Update Theater</h2>
+
+        <form action="/update-theater" method="post" enctype="multipart/form-data" th:object="${theaterDto}">
+            <input type="hidden" name="id" th:value="${id}">
+
+            <label>Name</label>
+            <input type="text" th:field="*{name}">
+            <span th:errors="*{name}"></span>
+
+            <label>Address</label>
+            <input type="text" th:field="*{address}">
+            <span th:errors="*{address}"></span>
+
+            <label>Location Link</label>
+            <input type="text" th:field="*{locationLink}">
+            <span th:errors="*{locationLink}"></span>
+
+            <label>Image</label>
+            <input type="file" accept="image/*" th:field="*{image}">
+            <span th:errors="*{image}"></span>
+            <p class="note">If you don't want to change the image, don't upload a new one.</p>
+
+            <div>
+                <img alt="Current Image" height="100px" width="100px" th:src="${imageLink}">
+            </div>
+
+            <button type="submit">Update Theater</button>
+        </form>
+    </div>
+
 </body>
 </html>

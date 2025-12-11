@@ -1,56 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Manage Theater</title>
+<title>Manage Theaters | BookMyTicket</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #0d0d0d;
+        color: #fff;
+        text-align: center;
+    }
+
+    .navbar {
+        background: #1a1a1a;
+        padding: 15px 30px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffcc00;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    /* Toastify */
+    .toastify-container {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 9999;
+    }
+
+    .toastify {
+        min-width: 280px;
+        border-radius: 8px;
+        padding: 14px 18px;
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .toastify.success { background: #2ecc71; }
+    .toastify.error { background: #e74c3c; }
+
+    /* Theater Card */
+    .theater-card {
+        background: rgba(30,30,30,0.85);
+        border-radius: 12px;
+        padding: 20px;
+        width: 280px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        transition: transform 0.3s, box-shadow 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .theater-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+    }
+
+    .theater-card img {
+        width: 100%;
+        height: 150px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        object-fit: cover;
+    }
+
+    .theater-card h3 {
+        color: #ffcc00;
+        margin: 8px 0;
+        text-align: center;
+    }
+
+    .theater-card p {
+        font-size: 14px;
+        color: #ccc;
+        margin: 4px 0;
+        text-align: center;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        margin: 4px 2px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-edit { background: #ffcc00; color: black; }
+    .btn-edit:hover { background: #e6b800; }
+
+    .btn-delete { background: #e74c3c; }
+    .btn-delete:hover { background: #c0392b; }
+
+    .btn-manage { background: #3498db; color: #fff; }
+    .btn-manage:hover { background: #2980b9; }
+
+    .btn-location { background: #2ecc71; }
+    .btn-location:hover { background: #27ae60; }
+
+    .btn-add { display: block; margin: 40px auto; padding: 12px 25px; background: #ff3c3c; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 16px;}
+    .btn-add:hover { background: #ff1a1a; }
+
+    .no-theaters {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 24px;
+        color: #ffcc00;
+    }
+</style>
 </head>
+
 <body>
-<div align="center">
-<!-- TOASTIFY -->
-	<div class="toastify-container">
-		<div th:if="${pass}" class="toastify success">
-			<span th:text="${pass}"></span>
-		</div>
-		<div th:if="${fail}" class="toastify error">
-			<span th:text="${fail}"></span>
-		</div>
-	</div>
-	
-	<div th:if="${theaters.isEmpty()}">
-		<h1>No Theaters Present</h1>
-	</div>
-	<div th:if="${!theaters.isEmpty()}">
-		<table border="1">
-			<tr>
-				<th>Name</th>
-				<th>Image</th>
-				<th>Address</th>
-				<th>Address Link</th>
-				<th>Number of Screens</th>
-				<th>Action</th>
-			</tr>
-			
-			<tr th:each="theater:${theaters}">
-				<th th:text="${theater.name}"></th>
-				<th> <img alt="" height="100px" width="100px" th:src="${theater.imageLocation}"> </th>
-				<th th:text="${theater.address}"></th>
-				<th><a target="_blank" th:href="${theater.locationLink}">
-				<button>Click</button></a></th>
-				<th th:text="${theater.screenCount}"></th>
-				<th>
-					<a th:href="'/edit-theater/'+${theater.id}"><button>Edit</button></a>
-					<a th:href="'/delete-theater/'+${theater.id}"><button>Delete</button></a>
-					<a th:href="'/manage-screens/'+${theater.id}"><button>Manage Screens</button></a>
-				</th>
-			</tr>
-			
-		</table>
-	</div>
-	
-	<div>
-		<a href="/add-theater"><button>Add Theater</button></a>
-	</div>
-	
+
+<div class="navbar">BookMyTicket – Manage Theaters</div>
+
+<!-- Toastify -->
+<div class="toastify-container">
+    <div th:if="${pass}" class="toastify success">
+        <span th:text="${pass}"></span>
+    </div>
+    <div th:if="${fail}" class="toastify error">
+        <span th:text="${fail}"></span>
+    </div>
 </div>
+
+<!-- If no theaters -->
+<div th:if="${theaters.isEmpty()}" class="no-theaters">No Theaters Present</div>
+
+<!-- Theaters Container -->
+<div class="container" th:if="${!theaters.isEmpty()}">
+    <div class="theater-card" th:each="theater : ${theaters}">
+        <img th:src="${theater.imageLocation}" alt="Theater Image">
+        <h3 th:text="${theater.name}"></h3>
+        <p th:text="${theater.address}"></p>
+        <p>Number of Screens: <span th:text="${theater.screenCount}"></span></p>
+        <div>
+            <a th:href="${theater.locationLink}" target="_blank"><button class="btn btn-location">Location</button></a>
+            <a th:href="'/edit-theater/'+${theater.id}"><button class="btn btn-edit">Edit</button></a>
+            <a th:href="'/delete-theater/'+${theater.id}"><button class="btn btn-delete">Delete</button></a>
+            <a th:href="'/manage-screens/'+${theater.id}"><button class="btn btn-manage">Manage Screens</button></a>
+        </div>
+    </div>
+</div>
+
+<!-- Add Theater Button -->
+<a href="/add-theater" style="text-decoration:none"><button class="btn-add" >Add Theater</button></a>
+
 </body>
 </html>

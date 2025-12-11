@@ -1,16 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Manage Seats</title>
+<title>Manage Seats | BookMyTicket</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #0d0d0d;
+        color: #fff;
+        text-align: center;
+    }
+
+    .navbar {
+        background: #1a1a1a;
+        padding: 15px 30px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffcc00;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        display: inline-block;
+        background: rgba(30,30,30,0.85);
+        padding: 30px;
+        border-radius: 12px;
+        margin: 15px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        width: 300px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+    }
+
+    .card h3 {
+        color: #ffcc00;
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        margin: 6px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-edit { background: #ffcc00; color: black; }
+    .btn-edit:hover { background: #e6b800; }
+
+    .btn-add { background: #ff3c3c; color: white; }
+    .btn-add:hover { background: #ff1a1a; }
+
+    .no-seats {
+        margin-top: 50px;
+        font-size: 22px;
+        color: #ffcc00;
+    }
+</style>
+
 </head>
 <body>
-<div th:if="${!seats.isEmpty()}">
-		<div>Seats</div>
-		<a><button>Edit Seat Layout</button></a>
-	</div>
-	<div th:if="${seats.isEmpty()}">
-		<a th:href="'/add-seats/'+${id}"><button>Add Seat Layout</button></a>
-	</div>
+
+<div class="navbar">BookMyTicket – Manage Seats</div>
+
+<div class="container">
+
+    <!-- If seats exist -->
+    <div th:if="${!seats.isEmpty()}" class="card">
+        <h3>Seats Layout</h3>
+        <p>Total Seats: <span th:text="${seats.size()}"></span></p>
+        <a><button class="btn btn-edit">Edit Seat Layout</button></a>
+    </div>
+
+    <!-- If seats do not exist -->
+    <div th:if="${seats.isEmpty()}" class="card">
+        <h3>No Seat Layout Found</h3>
+        <a th:href="'/add-seats/'+${id}"><button class="btn btn-add">Add Seat Layout</button></a>
+    </div>
+
+</div>
+
 </body>
 </html>
