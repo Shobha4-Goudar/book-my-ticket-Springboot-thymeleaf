@@ -200,4 +200,20 @@ public class UserController {
 	public String addMovie(@Valid MovieDto movieDto,BindingResult result ,RedirectAttributes attributes, HttpSession session) {
 		return userService.addMovie(movieDto,result, attributes, session);
 	}
+	
+	@GetMapping("/delete-movie/{id}")
+	public String deleteMovie(@PathVariable Long id, HttpSession session, RedirectAttributes attributes) {
+		return userService.deleteMovie(id, session, attributes);
+	}
+
+	@GetMapping("/edit-movie/{id}")
+	public String edditMovie(@PathVariable Long id, HttpSession session, RedirectAttributes attributes, ModelMap map) {
+		return userService.editMovie(id, session, attributes, map);
+	}
+	
+	@PostMapping("/update-movie")
+	public String updateMovie(@Valid MovieDto movieDto, BindingResult result, @RequestParam Long id, ModelMap map,
+			RedirectAttributes attributes, HttpSession session) {
+		return userService.updateMovie(movieDto, id, result, session, attributes, map);
+	}
 }

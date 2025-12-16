@@ -307,21 +307,12 @@ public class UserServiceImpl implements UserService{
 			return "add-theater.html";
 		}
 
-		String baseUploadDir = System.getProperty("user.dir") + "/uploads/theaters/";
-		File directory = new File(baseUploadDir);
-		if (!directory.exists())
-			directory.mkdirs();
-
-		String filename = theaterDto.getName() + image.getOriginalFilename();
-		File destination = new File(directory, filename);
-		image.transferTo(destination);
-
 		Theater theater = new Theater();
 		theater.setName(theaterDto.getName());
 		theater.setAddress(theaterDto.getAddress());
 		theater.setLocationLink(theaterDto.getLocationLink());
-		theater.setImageLocation("/uploads/theaters/" + filename);
 
+		theater.setImageLocation(cloudinaryHelper.getTheaterImageLink(image));
 		theaterRepository.save(theater);
 
 		attributes.addFlashAttribute("pass", "Theater Added Successfully");
@@ -426,7 +417,7 @@ public class UserServiceImpl implements UserService{
 			attributes.addFlashAttribute("fail", "Invalid Session");
 			return "redirect:/login";
 		} else {
-			Theater theater = theaterRepository.findById(id).get();
+			theaterRepository.findById(id).get();
 			screenDto.setTheaterId(id);
 			map.put("screenDto", screenDto);
 			return "add-screen.html";
@@ -536,7 +527,7 @@ public class UserServiceImpl implements UserService{
 			attributes.addFlashAttribute("fail", "Invalid Session");
 			return "redirect:/login";
 		} else {
-			Screen screen = screenRepository.findById(id).orElseThrow();
+			 screenRepository.findById(id).orElseThrow();
 			map.put("id", id);
 			return "add-seats.html";
 		}	
@@ -591,6 +582,79 @@ public class UserServiceImpl implements UserService{
 			attributes.addFlashAttribute("pass", "Movie Added Success");
 			return "redirect:/manage-movies";
 
+		}
+	}
+
+	@Override
+	public String deleteMovie(Long id, HttpSession session, RedirectAttributes attributes) {
+		User user = getUserFromSession(session);
+		if (user == null || !user.getRole().equals("ADMIN")) {
+			attributes.addFlashAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		} else {
+			Movie movie = movieRepository.findById(id).orElseThrow();
+			 
+			movieRepository.save(movie);
+			movieRepository.deleteById(id);
+			attributes.addFlashAttribute("pass", "Movie Removed Success");
+			return "redirect:/manage-movies" ;
+		}
+	}
+
+	@Override
+	public String editMovie(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map) {
+		User user = getUserFromSession(session);
+		if (user == null || !user.getRole().equals("ADMIN")) {
+			attributes.addFlashAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		} else {
+			Movie movie = movieRepository.findById(id).orElseThrow();
+			MovieDto movieDto = new MovieDto();
+		    movieDto.setName(movie.getName());
+		    movieDto.setGenre(movie.getGenre());
+		    movieDto.setLanguages(movie.getLanguages());
+		    movieDto.setTrailerLink(movie.getTrailerLink());
+		    movieDto.setDuration(movie.getDuration());
+		    movieDto.setDescription(movie.getDescription());
+		    movieDto.setReleaseDate(movie.getReleaseDate());
+		    movieDto.setCast(movie.getCast());
+			map.put("movieDto", movieDto);
+			map.put("imageLink", movie.getImageLink());
+			
+			return "edit-movie.html";
+		}
+	}
+
+	@Override
+	public String updateMovie(MovieDto movieDto, Long id, BindingResult result, HttpSession session,
+			RedirectAttributes attributes, ModelMap map) {
+		User user = getUserFromSession(session);
+		if (user == null || !user.getRole().equals("ADMIN")) {
+			attributes.addFlashAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		} else {
+			Movie movie=movieRepository.findById(id).orElseThrow();
+//			Movie movie = new Movie();
+			movie.setId(id);
+			movie.setName(movieDto.getName());
+			movie.setGenre(movieDto.getGenre());
+			movie.setTrailerLink(movieDto.getTrailerLink());
+			movie.setDuration(movieDto.getDuration());
+			movie.setDescription(movieDto.getDescription());
+			movie.setLanguages(movieDto.getLanguages());
+			movie.setReleaseDate(movieDto.getReleaseDate());
+			movie.setCast(movieDto.getCast());
+
+			MultipartFile image = movieDto.getImage();
+			if (image != null && !image.isEmpty()) {
+		        String imageUrl = cloudinaryHelper.generateImageLink(image);
+		        movie.setImageLink(imageUrl);
+		    }
+			
+				
+			movieRepository.save(movie);
+			attributes.addFlashAttribute("pass", "Movie Updated Successfully");
+			return "redirect:/manage-movies";
 		}
 	}
 	

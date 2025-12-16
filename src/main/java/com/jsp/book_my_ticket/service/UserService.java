@@ -74,4 +74,11 @@ public interface UserService {
 	String loadAddMovie(MovieDto movieDto, RedirectAttributes attributes, HttpSession session);
 
 	String addMovie(MovieDto movieDto, BindingResult result, RedirectAttributes attributes, HttpSession session);
+
+	String deleteMovie(Long id, HttpSession session, RedirectAttributes attributes);
+
+	String editMovie(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String updateMovie( MovieDto movieDto, Long id, BindingResult result, HttpSession session,
+			RedirectAttributes attributes, ModelMap map);
 }

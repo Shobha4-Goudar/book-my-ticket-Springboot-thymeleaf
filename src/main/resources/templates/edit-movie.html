@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Add Movie | BookMyTicket</title>
+<title>Edit Movie | BookMyTicket</title>
 
 <style>
     body {
@@ -13,16 +13,16 @@
     }
 
     .container {
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
         padding: 20px;
     }
 
     .card {
         background: #1e1e1e;
-        width: 600px;
+        width: 650px;
         padding: 30px;
         border-radius: 12px;
         box-shadow: 0 0 25px rgba(0,0,0,0.7);
@@ -35,27 +35,26 @@
     }
 
     label {
+        font-weight: bold;
         display: block;
         margin-bottom: 6px;
-        font-weight: bold;
     }
 
     input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    input[type="file"] {
+    input[type="file"],
+    input[type="date"] {
         width: 100%;
         padding: 9px;
         border-radius: 6px;
         border: none;
         outline: none;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     .error {
         color: #ff4d4d;
         font-size: 13px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         display: block;
     }
 
@@ -73,79 +72,52 @@
     .preview img {
         height: 120px;
         border-radius: 6px;
-        display: none;
+        margin-top: 8px;
     }
 
     iframe {
         width: 100%;
-        height: 200px;
-        border-radius: 8px;
+        height: 220px;
+        border-radius: 10px;
         border: none;
-        display: none;
         margin-top: 10px;
     }
 
     .buttons {
         display: flex;
-        gap: 10px;
-        margin-top: 15px;
+        gap: 12px;
+        margin-top: 20px;
     }
 
     button {
         flex: 1;
         padding: 10px;
-        border: none;
-        border-radius: 6px;
         font-size: 16px;
         font-weight: bold;
+        border: none;
+        border-radius: 6px;
         cursor: pointer;
     }
 
-    .btn-primary {
+    .btn-update {
         background: #ffcc00;
         color: #000;
     }
 
-    .btn-primary:hover {
+    .btn-update:hover {
         background: #e6b800;
     }
 
-    .btn-secondary {
+    .btn-cancel {
         background: #444;
         color: #fff;
     }
 
-    .btn-secondary:hover {
+    .btn-cancel:hover {
         background: #666;
     }
 
-    /* Toast */
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 6px;
-        font-weight: bold;
-        animation: fade 4s forwards;
-    }
-
-    .toast.success {
-        background: #2ecc71;
-        color: #000;
-    }
-
-    .toast.error {
-        background: #e74c3c;
-    }
-
-    @keyframes fade {
-        0% {opacity: 1;}
-        80% {opacity: 1;}
-        100% {opacity: 0;}
-    }
-
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
         .card {
             width: 100%;
         }
@@ -155,17 +127,16 @@
 
 <body>
 
-<!-- TOAST -->
-<div th:if="${pass}" class="toast success" th:text="${pass}"></div>
-<div th:if="${fail}" class="toast error" th:text="${fail}"></div>
-
 <div class="container">
     <div class="card">
-        <h2>Add Movie</h2>
+        <h2>Edit Movie</h2>
 
-        <form action="/add-movie" method="post"
+        <form action="/update-movie"
+              method="post"
               th:object="${movieDto}"
               enctype="multipart/form-data">
+
+            <input type="hidden" name="id" th:value="${id}">
 
             <label>Name</label>
             <input type="text" th:field="*{name}">
@@ -180,29 +151,33 @@
             <span class="error" th:errors="*{languages}"></span>
 
             <label>Duration</label>
-            <input type="time" th:field="*{duration}">
+            <input type="text" th:field="*{duration}">
             <span class="error" th:errors="*{duration}"></span>
 
             <label>Movie Image</label>
-            <input type="file" accept="image/*" th:field="*{image}" onchange="previewImage(event)">
+            <input type="file" accept="image/*" th:field="*{image}">
             <span class="error" th:errors="*{image}"></span>
+            <p class="note">If you don’t want to change the image, don’t upload a new one.</p>
 
             <div class="preview">
-                <img id="imagePreview">
+                <img th:src="${imageLink}" alt="Current Image">
             </div>
 
-            <label>Trailer Link (YouTube)</label>
-            <input type="text" th:field="*{trailerLink}" oninput="previewTrailer(this.value)">
+            <label>Trailer Link</label>
+            <input type="text" th:field="*{trailerLink}">
             <span class="error" th:errors="*{trailerLink}"></span>
 
-            <iframe id="trailerPreview"></iframe>
+            <iframe th:if="${movieDto.trailerLink != null}"
+                    th:src="${movieDto.trailerLink}"
+                    allowfullscreen>
+            </iframe>
 
             <label>Description</label>
             <input type="text" th:field="*{description}">
             <span class="error" th:errors="*{description}"></span>
 
             <label>Release Date</label>
-            <input type="date" th:field="*{releaseDate}">
+            <input type="date" th:value="${#temporals.format(movieDto.releaseDate, 'yyyy-MM-dd')}">
             <span class="error" th:errors="*{releaseDate}"></span>
 
             <label>Cast</label>
@@ -210,34 +185,15 @@
             <span class="error" th:errors="*{cast}"></span>
 
             <div class="buttons">
-                <button class="btn-primary">Add Movie</button>
+                <button class="btn-update">Update Movie</button>
                 <a href="/manage-movies">
-                    <button type="button" class="btn-secondary">Cancel</button>
+                    <button type="button" class="btn-cancel">Cancel</button>
                 </a>
             </div>
 
         </form>
     </div>
 </div>
-
-<script>
-function previewImage(event) {
-    const img = document.getElementById("imagePreview");
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-}
-
-function previewTrailer(link) {
-    const iframe = document.getElementById("trailerPreview");
-    if (link.includes("youtube") || link.includes("youtu.be")) {
-        let videoId = link.split("v=")[1] || link.split("/").pop();
-        iframe.src = "https://www.youtube.com/embed/" + videoId;
-        iframe.style.display = "block";
-    } else {
-        iframe.style.display = "none";
-    }
-}
-</script>
 
 </body>
 </html>
