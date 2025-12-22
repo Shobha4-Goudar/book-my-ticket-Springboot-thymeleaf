@@ -5,71 +5,181 @@
 <title>Manage Seats | BookMyTicket</title>
 
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Poppins', sans-serif;
-        background: #0d0d0d;
-        color: #fff;
-        text-align: center;
-    }
+ /* PAGE */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: radial-gradient(circle at top, #1b1b1b, #050505);
+    color: #eaeaea;
+}
 
-    .navbar {
-        background: #1a1a1a;
-        padding: 15px 30px;
-        font-size: 22px;
-        font-weight: bold;
-        color: #ffcc00;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(255, 204, 0, 0.25);
-    }
+/* NAVBAR */
+.navbar {
+    background: #0f0f0f;
+    padding: 16px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffcc00;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.7);
+}
 
-    .container {
-        margin-top: 50px;
-    }
+/* CONTAINER */
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(20,20,20,0.95);
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
 
-    .card {
-        display: inline-block;
-        background: rgba(30,30,30,0.85);
-        padding: 30px;
-        border-radius: 12px;
-        margin: 15px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-        width: 300px;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
+/* SCREEN */
+.screen {
+    margin: 35px auto;
+    padding: 14px;
+    width: 70%;
+    background: linear-gradient(to right, #555, #999, #555);
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-align: center;
+    color: #000;
+    box-shadow: inset 0 -8px 16px rgba(0,0,0,0.6);
+}
 
-    .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.6);
-    }
+/* SEAT ROW */
+.seat-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
 
-    .card h3 {
-        color: #ffcc00;
-        margin-bottom: 15px;
-    }
+/* ROW LABEL */
+.row-label {
+    width: 38px;
+    height: 38px;
+    background: #ffcc00;
+    color: #000;
+    border-radius: 50%;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
 
-    .btn {
-        padding: 10px 18px;
-        margin: 6px;
-        border: none;
-        border-radius: 6px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+/* SEAT GROUP */
+.seat-group {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 720px;
+}
 
-    .btn-edit { background: #ffcc00; color: black; }
-    .btn-edit:hover { background: #e6b800; }
+/* SEAT */
+.seat {
+    width: 36px;
+    height: 36px;
+    margin: 6px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .btn-add { background: #ff3c3c; color: white; }
-    .btn-add:hover { background: #ff1a1a; }
+/* HOVER EFFECT */
+.seat:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.8);
+}
 
-    .no-seats {
-        margin-top: 50px;
-        font-size: 22px;
-        color: #ffcc00;
-    }
+/* CATEGORY COLORS */
+.seat.STANDARD {
+    background: #adb5bd;
+    color: #000;
+}
+
+.seat.PREMIUM {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.seat.VIP {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* EMPTY STATE */
+.card {
+    background: #111;
+    padding: 30px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+}
+
+.card h3 {
+    color: #ffcc00;
+}
+
+.btn-add {
+    background: #ff3c3c;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-add:hover {
+    background: #ff1a1a;
+}
+ 
+   
+   
+   /* BOOKED SEAT */
+.seat.booked {
+    background: #2b2b2b !important;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* SELECTED SEAT */
+.seat.selected {
+    background: #28a745 !important;
+    color: white;
+    box-shadow: 0 0 12px rgba(40,167,69,0.8);
+}
+
+/* LEGEND */
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin: 20px 0 35px;
+    font-size: 14px;
+}
+
+.legend div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend .seat {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: default;
+}
+   
 </style>
 
 </head>
@@ -79,20 +189,71 @@
 
 <div class="container">
 
-    <!-- If seats exist -->
-    <div th:if="${!seats.isEmpty()}" class="card">
-        <h3>Seats Layout</h3>
-        <p>Total Seats: <span th:text="${seats.size()}"></span></p>
-        <a><button class="btn btn-edit">Edit Seat Layout</button></a>
+    <!-- IF SEATS EXIST -->
+    <div th:if="${seatsByRow != null and !seatsByRow.isEmpty()}">
+
+        <!-- SCREEN -->
+        <div class="screen">🎬 SCREEN THIS SIDE 🎬</div>
+        
+<div class="legend">
+    <div><span class="seat STANDARD"></span> Standard</div>
+    <div><span class="seat PREMIUM"></span> Premium</div>
+    <div><span class="seat VIP"></span> VIP</div>
+    <div><span class="seat booked"></span> Booked</div>
+    <div><span class="seat selected"></span> Selected</div>
+</div>
+
+        <!-- SEAT ROWS -->
+        <div th:each="rowEntry : ${seatsByRow}" class="seat-row">
+
+            <!-- ROW NAME -->
+            <div class="row-label" th:text="${rowEntry.key}"></div>
+
+            <!-- SEATS -->
+            <div th:each="seat : ${rowEntry.value}"
+     class="seat"
+     th:classappend="${seat.category}"
+     th:attr="data-seat=${seat.seatColumn}">
+</div>
+            
+
+        </div>
     </div>
 
-    <!-- If seats do not exist -->
-    <div th:if="${seats.isEmpty()}" class="card">
+    <!-- IF NO SEATS -->
+    <div th:if="${seatsByRow == null or #maps.isEmpty(seatsByRow)}" class="card">
         <h3>No Seat Layout Found</h3>
-        <a th:href="'/add-seats/'+${id}"><button class="btn btn-add">Add Seat Layout</button></a>
+        <a th:href="'/add-seats/'+${id}">
+            <button class="btn btn-add">➕ Add Seat Layout</button>
+        </a>
     </div>
 
 </div>
+
+
+</div>
+
+<script>
+document.querySelectorAll(".seat").forEach(seat => {
+
+    if (seat.classList.contains("booked")) return;
+
+    seat.addEventListener("click", () => {
+        seat.classList.toggle("selected");
+        updateSelectedSeats();
+    });
+});
+
+function updateSelectedSeats() {
+    let selected = [];
+    document.querySelectorAll(".seat.selected").forEach(seat => {
+        selected.push(seat.dataset.seat);
+    });
+    console.log("Selected seats:", selected);
+}
+</script>
+
+
 
 </body>
 </html>

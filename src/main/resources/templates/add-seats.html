@@ -1,10 +1,286 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Seat Layout</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<style>
+body {
+    background: #0d0d0d;
+    font-family: 'Poppins', sans-serif;
+    color: #eaeaea;
+}
+
+.container {
+    max-width: 950px;
+    margin-top: 50px;
+}
+
+.card {
+    background: rgba(25, 25, 25, 0.95);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #ffcc00, #ff9800);
+    color: #000;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    border-radius: 18px 18px 0 0;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* SCREEN */
+.screen {
+    background: linear-gradient(to right, #444, #777, #444);
+    height: 32px;
+    border-radius: 50px;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 32px;
+    letter-spacing: 3px;
+    color: #fff;
+    box-shadow: inset 0 -6px 12px rgba(0,0,0,0.7);
+}
+
+/* ROW BLOCK */
+.row-block {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(35, 35, 35, 0.9);
+    margin-bottom: 14px;
+    transition: 0.25s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.row-block:hover {
+    background: rgba(45, 45, 45, 0.95);
+    transform: translateY(-2px);
+}
+
+/* INPUTS */
+.row-block input,
+.row-block select {
+    height: 46px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+}
+
+.row-block input::placeholder {
+    color: #888;
+}
+
+.row-block select option {
+    background: #111;
+    color: #fff;
+}
+
+/* BUTTONS */
+.btn-outline-primary {
+    border-color: #ffcc00;
+    color: #ffcc00;
+}
+
+.btn-outline-primary:hover {
+    background: #ffcc00;
+    color: #000;
+}
+
+.btn-success {
+    background: #28a745;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-secondary {
+    background: #444;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #666;
+}
+
+.btn-danger {
+    background: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #b02a37;
+}
+
+/* ACTION BAR */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* PREVIEW AREA */
+#previewArea {
+    margin-top: 25px;
+}
+
+.preview-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.preview-row .label {
+    width: 40px;
+    font-weight: 700;
+    color: #ffcc00;
+}
+
+.preview-row span {
+    width: 34px;
+    height: 34px;
+    margin: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* CATEGORY COLORS */
+.STANDARD {
+    background: #6c757d;
+    color: #000;
+}
+
+.PREMIUM {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.VIP {
+    background: #dc3545;
+    color: #fff;
+}
+</style>
+
 </head>
+
 <body>
-<h1>Add Seats</h1>
+
+<div class="container">
+    <div class="card">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center">
+            🎬 Seat Layout Configuration
+        </div>
+
+        <div class="card-body">
+
+            <!-- Flash Messages -->
+            <div th:if="${success}" class="alert alert-success text-center"
+                 th:text="${success}"></div>
+            <div th:if="${fail}" class="alert alert-danger text-center"
+                 th:text="${fail}"></div>
+
+            <!-- Screen Indicator -->
+            <div class="screen">SCREEN THIS WAY</div>
+
+            <!-- Seat Layout Form -->
+            <form th:action="@{/add-seats/{id}(id=${id})}"
+                  th:object="${seatLayoutForm}"
+                  method="post">
+
+                <div id="rowsContainer"></div>
+
+                <button type="button"
+                        class="btn btn-outline-primary w-100 mt-3"
+                        onclick="addRow()">
+                    ➕ Add Seat Row
+                </button>
+
+                <div class="action-bar">
+                    <a th:href="'/manage-seats/'+${id}"
+                       class="btn btn-secondary">
+                        ⬅ Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-success px-4">
+                        💾 Save Layout
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let rowIndex = 0;
+
+    function addRow() {
+        const container = document.getElementById("rowsContainer");
+
+        container.insertAdjacentHTML("beforeend", `
+            <div class="row-block">
+                <input type="text"
+                       class="form-control"
+                       name="rows[${rowIndex}].rowName"
+                       placeholder="Row (A, B, VIP)"
+                       required>
+
+                <input type="number"
+                       class="form-control"
+                       name="rows[${rowIndex}].totalSeats"
+                       placeholder="Seats"
+                       min="1"
+                       required>
+
+                <select class="form-select"
+                        name="rows[${rowIndex}].category"
+                        required>
+                    <option value="">Category</option>
+                    <option value="STANDARD">Standard</option>
+                    <option value="PREMIUM">Premium</option>
+                    <option value="VIP">VIP</option>
+                </select>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="removeRow(this)">
+                    ❌
+                </button>
+            </div>
+        `);
+
+        rowIndex++;
+    }
+
+    function removeRow(button) {
+        button.parentElement.remove();
+    }
+</script>
+
 </body>
 </html>
