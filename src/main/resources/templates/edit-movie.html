@@ -131,7 +131,7 @@
     <div class="card">
         <h2>Edit Movie</h2>
 
-        <form action="/update-movie"
+        <form th:action="@{/update-movie/{id}(id=${movieId})}"
               method="post"
               th:object="${movieDto}"
               enctype="multipart/form-data">
@@ -177,7 +177,7 @@
             <span class="error" th:errors="*{description}"></span>
 
             <label>Release Date</label>
-            <input type="date" th:value="${#temporals.format(movieDto.releaseDate, 'yyyy-MM-dd')}">
+            <input type="date" th:field="*{releaseDate}">
             <span class="error" th:errors="*{releaseDate}"></span>
 
             <label>Cast</label>

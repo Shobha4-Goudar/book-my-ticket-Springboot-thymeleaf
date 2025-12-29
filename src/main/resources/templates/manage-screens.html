@@ -123,6 +123,37 @@
     .btn-delete:hover {
         background: #c0392b;
     }
+    .btn-manage {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+
+    background: linear-gradient(135deg, #15616d, #001524);
+    border-radius: 8px;
+    border: none;
+
+    box-shadow: 0 6px 15px rgba(21, 97, 109, 0.35);
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.btn-manage:hover {
+    background: linear-gradient(135deg, #001524, #15616d);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 21, 36, 0.45);
+}
+
+/* Active click */
+.btn-manage:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
 
     .empty {
         text-align: center;
@@ -167,6 +198,8 @@
                         <a th:href="'/delete-screen/' + ${screen.id}"
                            onclick="return confirm('Delete this screen?')"
                            class="btn btn-delete">Delete</a>
+                           <a th:href="'/manage-shows/'+${screen.id}" class="btn-manage">Shows</a>
+                           
                     </div>
                 </td>
             </tr>

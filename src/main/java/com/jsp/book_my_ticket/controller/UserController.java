@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -224,6 +225,11 @@ public class UserController {
 		return userService.addShow(showDto, result, attributes, session,map);
 	}
 	
+	@GetMapping("/book/movie/{id}")
+	public String bookMovie(@PathVariable Long id, HttpSession session, RedirectAttributes attributes, ModelMap map) {
+		return userService.bookMovie(id, session, attributes, map);
+	}
+	
 	@GetMapping("/delete-movie/{id}")
 	public String deleteMovie(@PathVariable Long id, HttpSession session, RedirectAttributes attributes) {
 		return userService.deleteMovie(id, session, attributes);
@@ -234,8 +240,8 @@ public class UserController {
 		return userService.editMovie(id, session, attributes, map);
 	}
 	
-	@PostMapping("/update-movie")
-	public String updateMovie(@Valid MovieDto movieDto, BindingResult result, @RequestParam Long id, ModelMap map,
+	@PostMapping("/update-movie/{id}")
+	public String updateMovie(@ModelAttribute MovieDto movieDto, BindingResult result, @PathVariable Long id, ModelMap map,
 			RedirectAttributes attributes, HttpSession session) {
 		return userService.updateMovie(movieDto, id, result, session, attributes, map);
 	}

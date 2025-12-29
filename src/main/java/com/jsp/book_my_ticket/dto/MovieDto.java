@@ -3,6 +3,7 @@ package com.jsp.book_my_ticket.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,7 @@ public class MovieDto {
 	@NotBlank(message = "* It is Required")
 	private String description;
 	@NotNull(message = "* It is Required")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate releaseDate;
 	@NotBlank(message = "* It is Required")
 	private String cast;
