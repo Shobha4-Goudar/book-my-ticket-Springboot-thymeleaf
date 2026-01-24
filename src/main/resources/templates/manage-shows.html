@@ -34,6 +34,8 @@
                 <td th:text="${show.ticketPrice}"></td>
 
                 <td th:text="${#lists.size(show.seats)}"></td>
+                
+                 <td> <a th:href="'/delete-show/'+${show.id}"><button>Delete</button> </a></td>
             </tr>
         </tbody>
     </table>

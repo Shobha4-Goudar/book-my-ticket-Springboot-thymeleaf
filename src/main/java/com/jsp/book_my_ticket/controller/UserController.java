@@ -1,6 +1,7 @@
 package com.jsp.book_my_ticket.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -244,5 +245,14 @@ public class UserController {
 	public String updateMovie(@ModelAttribute MovieDto movieDto, BindingResult result, @PathVariable Long id, ModelMap map,
 			RedirectAttributes attributes, HttpSession session) {
 		return userService.updateMovie(movieDto, id, result, session, attributes, map);
+	}
+	
+	@GetMapping("/delete-show/{id}")
+	public String deleteShow(@PathVariable Long id, RedirectAttributes attributes, HttpSession session) {
+		return userService.deleteShow(id, session, attributes);
+	}
+	@GetMapping("/selectShows")
+	public String displayShows(@RequestParam Long movieId,@RequestParam LocalDate date,RedirectAttributes attributes,ModelMap map) {
+		return userService.displayShowsOnDate(date,movieId,attributes,map);
 	}
 }

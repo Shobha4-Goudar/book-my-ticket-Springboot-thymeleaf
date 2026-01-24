@@ -1,6 +1,7 @@
 package com.jsp.book_my_ticket.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -95,4 +96,8 @@ public interface UserService {
 	String loadMain(ModelMap map);
 
 	String bookMovie(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String deleteShow(Long id, HttpSession session, RedirectAttributes attributes);
+
+	String displayShowsOnDate(LocalDate date, Long movieId, RedirectAttributes attributes, ModelMap map);
 }
