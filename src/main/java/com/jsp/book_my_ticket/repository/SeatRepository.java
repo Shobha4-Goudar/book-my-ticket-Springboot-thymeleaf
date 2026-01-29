@@ -10,4 +10,6 @@ import com.jsp.book_my_ticket.entity.Seat;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
 	List<Seat> findByScreenOrderBySeatRowAscSeatColumnAsc(Screen screen);
+	
+	Seat findBySeatNumber(String seatNumber);
 }

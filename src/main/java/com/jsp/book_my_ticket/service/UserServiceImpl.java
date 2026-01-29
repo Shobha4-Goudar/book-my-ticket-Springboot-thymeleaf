@@ -14,13 +14,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
+import com.google.zxing.WriterException;
 import com.jsp.book_my_ticket.dto.LoginDto;
 import com.jsp.book_my_ticket.dto.MovieDto;
 import com.jsp.book_my_ticket.dto.PasswordDto;
@@ -30,6 +31,7 @@ import com.jsp.book_my_ticket.dto.SeatRowDto;
 import com.jsp.book_my_ticket.dto.ShowDto;
 import com.jsp.book_my_ticket.dto.TheaterDto;
 import com.jsp.book_my_ticket.dto.UserDto;
+import com.jsp.book_my_ticket.entity.BookedTicket;
 import com.jsp.book_my_ticket.entity.Movie;
 import com.jsp.book_my_ticket.entity.Screen;
 import com.jsp.book_my_ticket.entity.Seat;
@@ -41,11 +43,17 @@ import com.jsp.book_my_ticket.repository.MovieRepository;
 import com.jsp.book_my_ticket.repository.ScreenRepository;
 import com.jsp.book_my_ticket.repository.SeatRepository;
 import com.jsp.book_my_ticket.repository.ShowRepository;
+import com.jsp.book_my_ticket.repository.ShowSeatRepository;
 import com.jsp.book_my_ticket.repository.TheaterRepository;
+import com.jsp.book_my_ticket.repository.TicketRepository;
 import com.jsp.book_my_ticket.repository.UserRepository;
 import com.jsp.book_my_ticket.util.AES;
 import com.jsp.book_my_ticket.util.CloudinaryHelper;
 import com.jsp.book_my_ticket.util.EmailHelper;
+import com.jsp.book_my_ticket.util.QrHelper;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -65,13 +73,18 @@ public class UserServiceImpl implements UserService{
 	private final RedisService redisService;
 	private final TheaterRepository theaterRepository;
 	private final ScreenRepository screenRepository;
-	
+	private final ShowSeatRepository showSeatRepository;
 	private final MovieRepository movieRepository;
 	private final CloudinaryHelper cloudinaryHelper;
 	
 	private final SeatRepository seatRepository;
 	
 	private final ShowRepository showRepository;
+	
+	private final TicketRepository ticketRepository;
+	private final QrHelper qrHelper;
+	private String rzrKey = "rzp_test_RaPsJq0rZSFWD1";
+	private String rzrSecret = "ZO0swacFGMgyE71JVvGuBOFP";
 	
 	@Override
 	public String register(UserDto userDto, BindingResult result,RedirectAttributes attributes) {
@@ -905,7 +918,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public String confirmBooking(Long showId, Long[] seatIds, HttpSession session, ModelMap map,
-			RedirectAttributes attributes) {
+			RedirectAttributes attributes)throws RazorpayException {
 		User user = getUserFromSession(session);
 		if (user == null || !user.getRole().equals("USER")) {
 			attributes.addFlashAttribute("fail", "Login to Continue Booking");
@@ -927,10 +940,74 @@ public class UserServiceImpl implements UserService{
 			}
 		}
 		
+		double amount = show.getTicketPrice() * seatIds.length;
+
+		RazorpayClient razorpay = new RazorpayClient(rzrKey, rzrSecret);
+
+		JSONObject orderRequest = new JSONObject();
+		orderRequest.put("amount", amount * 100);
+		orderRequest.put("currency", "INR");
+
+		Order order = razorpay.orders.create(orderRequest);
+		String id = order.get("id");
+		map.put("key", rzrKey);
+		map.put("amount", amount * 100);
+		map.put("currency", "INR");
+		map.put("orderId", id);
+		
 		map.put("show", show);
 		map.put("showSeats", showSeats);
 		
+		map.put("user", user);
+
+		BookedTicket ticket = new BookedTicket();
+		ticket.setMovieName(show.getMovie().getName());
+		ticket.setOrderId(id);
+		ticket.setScreenName(show.getScreen().getName());
+		String[] seatNumbers = showSeats.stream().map(x -> x.getSeat().getSeatNumber()).collect(Collectors.joining(","))
+				.split(",");
+		ticket.setSeatNumber(seatNumbers);
+		ticket.setShowDate(show.getShowDate().toString());
+		ticket.setShowTiming(show.getStartTime().toString());
+		ticket.setTheaterName(show.getScreen().getTheater().getName());
+		ticket.setTicketCount(seatNumbers.length);
+		ticket.setTicketPrice(show.getTicketPrice());
+		ticket.setShowId(showId);
+		;
+		redisService.saveTicket(id, ticket);
+		
 		return "confirm-ticket";
+	}
+
+	@Override
+	public String confirmTicket(HttpSession session, ModelMap map, RedirectAttributes attributes,
+			String razorpay_order_id, String razorpay_payment_id) throws IOException, WriterException{
+		User user = getUserFromSession(session);
+		if (user == null || !user.getRole().equals("USER")) {
+			attributes.addFlashAttribute("fail", "Login to Continue Booking");
+			return "redirect:/login";
+		}
+		BookedTicket ticket = redisService.getTicket(razorpay_order_id);
+		if (ticket == null) {
+			attributes.addFlashAttribute("fail", "Something Went Wrong try Again");
+			return "redirect:/login";
+		}
+		ticket.setPaymentId(razorpay_payment_id);
+		ticket.setUser(user);
+		byte[] qr = qrHelper.qrCreator(ticket.getMovieName() + "-" + ticket.getTheaterName() + "-"
+				+ ticket.getShowTiming() + "-" + Arrays.toString(ticket.getSeatNumber()));
+		ticket.setQrUrl(cloudinaryHelper.saveTicketQr(qr));
+		ticketRepository.save(ticket);
+
+		Show show = showRepository.findById(ticket.getShowId()).orElseThrow();
+		for (ShowSeat seat : show.getSeats()) {
+			if (Arrays.asList(ticket.getSeatNumber()).contains(seat.getSeat().getSeatNumber())) {
+				seat.setBooked(true);
+				showSeatRepository.save(seat);
+			}
+		}
+		map.put("ticket", ticket);
+		return "view-ticket.html";
 	}
 
 	
