@@ -13,14 +13,14 @@ public interface ShowRepository extends JpaRepository<Show, Long>{
 
 	List<Show> findByScreen(Screen screen);
 	
-	List<Show> findByShowDateAfter(LocalDate minusDays);
+	List<Show> findByShowDateAfter(LocalDate date);
 
-	List<Show> findByMovieAndShowDateAfter(Movie  movie, LocalDate minusDays);
+	List<Show> findByMovieAndShowDateAfter(Movie  movie, LocalDate date);
 	
 	boolean existsByScreen(Screen screen);
 
 	boolean existsByMovie(Movie movie);
 
-	List<Show> findByShowDateAndMovie(LocalDate date, Movie movie);
+	List<Show> findByShowDateAndMovie(LocalDate showDate, Movie movie);
 
 }

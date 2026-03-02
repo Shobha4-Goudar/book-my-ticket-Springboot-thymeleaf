@@ -16,15 +16,23 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 @Component
 public class QrHelper {
+	
+	
 
-	public byte[] qrCreator(String text) throws IOException, WriterException {
-		QRCodeWriter qrCodeWriter = new QRCodeWriter();
-		Map<EncodeHintType, Object> hints = new HashMap<>();
-		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-		BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200, hints);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MatrixToImageWriter.writeToStream(bitMatrix, "png", bos);
-		byte[] imageBytes = bos.toByteArray();
-		return imageBytes;
+	private static final int QR_SIZE = 200;
+	private static final String IMAGE_FORMAT = "png";
+	private static final String CHARSET = "UTF-8";
+
+	public byte[] createQr(String text) throws IOException, WriterException {
+		
+	QRCodeWriter qrCodeWriter = new QRCodeWriter();
+	Map<EncodeHintType, Object> hints = Map.of(EncodeHintType.CHARACTER_SET, CHARSET);
+
+	BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE, hints);
+
+	try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+		MatrixToImageWriter.writeToStream(bitMatrix, IMAGE_FORMAT, outputStream);
+		return outputStream.toByteArray();
+	}
 	}
 }

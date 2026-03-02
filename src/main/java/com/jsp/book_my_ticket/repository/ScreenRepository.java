@@ -8,8 +8,6 @@ import com.jsp.book_my_ticket.entity.Screen;
 import com.jsp.book_my_ticket.entity.Theater;
 
 public interface ScreenRepository extends JpaRepository<Screen, Long>{
-
-	List<Screen> findByTheater(Theater theater);
-
-	boolean existsByNameAndTheater(String name, Theater theater);
+    List<Screen> findByTheater(Theater theater);
+    boolean existsByNameAndTheater(String name, Theater theater);
 }

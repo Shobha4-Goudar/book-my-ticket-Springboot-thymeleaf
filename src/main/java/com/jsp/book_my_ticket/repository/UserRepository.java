@@ -1,6 +1,7 @@
 package com.jsp.book_my_ticket.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,10 +11,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	boolean existsByEmail(String email);
 
-	User findByEmail(String email);
-
 	boolean existsByMobile(Long mobile);
 	
-	List<User> findByRole(String string);
+	Optional<User> findByEmail(String email);
+	
+	List<User> findByRole(String role);
+	
+	void deleteByRole(String role);
 
 }
